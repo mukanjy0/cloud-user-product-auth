@@ -40,8 +40,13 @@ def lambda_handler(event, context):
 
     dynamodb = boto3.resource('dynamodb')
     table = dynamodb.Table('t_productos')
-    response = table.put_item(
-        Item=producto
+    key = {
+        'tenant_id': producto['tenant_id'],
+        'producto_id': producto['producto_id']
+    }
+    response = table.delete_item(
+        Key=key,
+        ReturnValues="ALL_OLD"
     )
     # Salida (json)
     return {
